@@ -1,14 +1,22 @@
+using System;
+using Unity.Mathematics;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    //Variables
+
+    public GameObject kunaiPrefab;
+    private string direccion = "Derecha";
     Rigidbody2D rb;
     SpriteRenderer sr;
     Animator animator;
-
+    public int kunaisDisponibles = 5;
     private bool puedeMoverseVerticalMente = false;
     private float defaultGravityScale = 1f;
     private bool puedeSaltar = true;
+    private bool pudeLanzarKunai = true;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,8 +36,8 @@ public class PlayerController : MonoBehaviour
         SetupMoverseHorizontal();
         SetupMoverseVertical();
         SetupSalto();
+        SetUpLanzarKunai();
     }
-
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -57,7 +65,6 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = defaultGravityScale;
         }
     }
-
 
     void SetupMoverseHorizontal() {
         rb.linearVelocityX = 0;
@@ -97,6 +104,18 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Space))
         {
             rb.linearVelocityY = 12.5f;
+        }
+    }
+
+    void SetUpLanzarKunai()
+    {
+        if(!pudeLanzarKunai || kunaisDisponibles <= 0) return;
+        if(Input.GetKeyUp(KeyCode.K))
+        {
+
+            GameObject kunai = Instantiate(kunaiPrefab, transform.position, Quaternion.Euler(0,0,-90));
+            kunai.GetComponent<KunaiController>().SetDirection(direccion);
+            kunaisDisponibles -= -1;
         }
     }
 }
