@@ -2,11 +2,10 @@ using System;
 using Unity.Mathematics;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     //Variables
-
     public GameObject kunaiPrefab;
     private string direccion = "Derecha";
     Rigidbody2D rb;
@@ -16,8 +15,10 @@ public class PlayerController : MonoBehaviour
     private bool puedeMoverseVerticalMente = false;
     private float defaultGravityScale = 1f;
     private bool puedeSaltar = true;
-    private bool pudeLanzarKunai = true;
-
+    private bool puedeLanzarKunai = true;
+    public Text vidasText;
+    private int vidas = 3;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
 
         defaultGravityScale = rb.gravityScale;
+
     }
 
     // Update is called once per frame
@@ -39,12 +41,15 @@ public class PlayerController : MonoBehaviour
         SetUpLanzarKunai();
     }
 
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemigo"))
         {
             ZombieController zombie = collision.gameObject.GetComponent<ZombieController>();
             Debug.Log($"Colision con Enemigo: {zombie.puntosVida}");
+            vidas--;
+            vidasText.text = "VIDAS: " + vidas;
             Destroy(collision.gameObject);
         }
     }
@@ -107,15 +112,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void SetUpLanzarKunai()
-    {
-        if(!pudeLanzarKunai || kunaisDisponibles <= 0) return;
-        if(Input.GetKeyUp(KeyCode.K))
+    void SetUpLanzarKunai() {
+        if (!puedeLanzarKunai || kunaisDisponibles <= 0) return;
+        if (Input.GetKeyUp(KeyCode.K))
         {
-
-            GameObject kunai = Instantiate(kunaiPrefab, transform.position, Quaternion.Euler(0,0,-90));
+            GameObject kunai = Instantiate(kunaiPrefab, transform.position, Quaternion.Euler(0, 0, -90));
             kunai.GetComponent<KunaiController>().SetDirection(direccion);
-            kunaisDisponibles -= -1;
+            kunaisDisponibles -= 1;
         }
     }
 }

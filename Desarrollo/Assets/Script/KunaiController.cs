@@ -1,25 +1,28 @@
+using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class KunaiController : MonoBehaviour
 {
-    Rigidbody2D rb;
-    SpriteRenderer sr;
     private string direccion = "Derecha";
 
-    
+    Rigidbody2D rb;
+    SpriteRenderer sr;
+    private Text enemigosMuertosText;
+    private int enemigosMuertos = 0;
     void Start()
     {
-        //Initializate the kunai object
+        // Initialize the Kunai object
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        enemigosMuertosText = GameObject.Find("EnemigosMuertos").GetComponent<Text>();
         Destroy(this.gameObject, 5f);
     }
 
-    // Update is called once per frame
     void Update()
     {
-         // Update the Kunai object
+        // Update the Kunai object
         if (direccion == "Derecha")
         {
             rb.linearVelocityX = 15;
@@ -31,21 +34,22 @@ public class KunaiController : MonoBehaviour
             rb.linearVelocityX = -15;
             sr.flipY = true;
         }
-    }
-
-       void OnTriggerEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Enemigo"))
-        {
-            Destroy(collision.gameObject);
-            Destroy(this.gameObject);
-        }
         
     }
 
-     public void SetDirection(string direction)
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        // Handle collision with the Kunai object
+        if (collision.gameObject.CompareTag("Enemigo"))
+        {
+            Destroy(collision.gameObject);          
+            Destroy(this.gameObject);
+            enemigosMuertos ++; 
+        }
+    }
+
+    public void SetDirection(string direction)
     {
         this.direccion = direction;
     }
-
 }
