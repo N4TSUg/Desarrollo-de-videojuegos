@@ -9,14 +9,12 @@ public class KunaiController : MonoBehaviour
 
     Rigidbody2D rb;
     SpriteRenderer sr;
-    private Text enemigosMuertosText;
-    private int enemigosMuertos = 0;
+    
     void Start()
     {
         // Initialize the Kunai object
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-        enemigosMuertosText = GameObject.Find("EnemigosMuertos").GetComponent<Text>();
         Destroy(this.gameObject, 5f);
     }
 
@@ -34,7 +32,6 @@ public class KunaiController : MonoBehaviour
             rb.linearVelocityX = -15;
             sr.flipY = true;
         }
-        
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -44,7 +41,16 @@ public class KunaiController : MonoBehaviour
         {
             Destroy(collision.gameObject);          
             Destroy(this.gameObject);
-            enemigosMuertos ++; 
+
+            GameObject jugador = GameObject.FindWithTag("Player");
+            if (jugador != null)
+            {
+                PlayerController pc = jugador.GetComponent<PlayerController>();
+                if (pc != null)
+                {
+                    pc.IncrementarEnemigosMuertos();
+                }
+            }
         }
     }
 

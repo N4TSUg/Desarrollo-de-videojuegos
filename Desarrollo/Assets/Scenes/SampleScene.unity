@@ -1091,7 +1091,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: b7a35348f8c732449a77b475eec6d8ca, type: 3}
     m_FontSize: 20
     m_FontStyle: 1
     m_BestFit: 0
@@ -1302,7 +1302,7 @@ GameObject:
   - component: {fileID: 1289983214}
   m_Layer: 0
   m_Name: NinjaPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1479,6 +1479,7 @@ MonoBehaviour:
   kunaisDisponibles: 5
   vidasText: {fileID: 1727616187}
   enemigosMuertosText: {fileID: 901125135}
+  enemigosMuertos: 0
 --- !u!1 &1336536689
 GameObject:
   m_ObjectHideFlags: 0
@@ -3803,7 +3804,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: b7a35348f8c732449a77b475eec6d8ca, type: 3}
     m_FontSize: 20
     m_FontStyle: 1
     m_BestFit: 0

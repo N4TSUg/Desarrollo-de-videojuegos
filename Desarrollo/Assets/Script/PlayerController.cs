@@ -18,7 +18,9 @@ public class PlayerController : MonoBehaviour
     private bool puedeLanzarKunai = true;
     public Text vidasText;
     private int vidas = 3;
-    
+    public Text enemigosMuertosText;
+    public int enemigosMuertos = 0;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -41,7 +43,6 @@ public class PlayerController : MonoBehaviour
         SetUpLanzarKunai();
     }
 
-
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemigo"))
@@ -52,6 +53,12 @@ public class PlayerController : MonoBehaviour
             vidasText.text = "VIDAS: " + vidas;
             Destroy(collision.gameObject);
         }
+    }
+
+    public void IncrementarEnemigosMuertos()
+    {
+        enemigosMuertos++;
+        enemigosMuertosText.text = "ENEMIGOS DERROTADOS: " + enemigosMuertos;
     }
 
     void OnTriggerStay2D(Collider2D other)
