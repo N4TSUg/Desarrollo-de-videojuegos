@@ -6,15 +6,18 @@ using UnityEngine.UI;
 public class KunaiController : MonoBehaviour
 {
     private string direccion = "Derecha";
+    private float damage = 1f;
 
     Rigidbody2D rb;
     SpriteRenderer sr;
-    
+    private Text enemigosMuertosText;
+    private static int enemigosMuertos = 0;
     void Start()
     {
         // Initialize the Kunai object
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        enemigosMuertosText = GameObject.Find("EnemigosMuertos")?.GetComponent<Text>();
         Destroy(this.gameObject, 5f);
     }
 
@@ -32,30 +35,40 @@ public class KunaiController : MonoBehaviour
             rb.linearVelocityX = -15;
             sr.flipY = true;
         }
+        
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        // Handle collision with the Kunai object
-        if (collision.gameObject.CompareTag("Enemigo"))
+        if (collision.CompareTag("Enemigo"))
         {
-            Destroy(collision.gameObject);          
-            Destroy(this.gameObject);
 
-            GameObject jugador = GameObject.FindWithTag("Player");
-            if (jugador != null)
+            var enemigo = collision.GetComponent<ZombieController>();
+
+            if (enemigo != null)
             {
-                PlayerController pc = jugador.GetComponent<PlayerController>();
-                if (pc != null)
+                bool murio = enemigo.RecibirDaño(damage);
+                if (murio)
                 {
-                    pc.IncrementarEnemigosMuertos();
+                    enemigosMuertos++;
+                    if (enemigosMuertosText != null)
+                    {
+                        enemigosMuertosText.text = "ENEMIGOS MUERTOS: " + enemigosMuertos;
+                    }
                 }
             }
+            Destroy(this.gameObject);
         }
+
     }
 
     public void SetDirection(string direction)
     {
         this.direccion = direction;
+    }
+
+    public void SetDamage(float d)
+    {
+        damage = d;
     }
 }

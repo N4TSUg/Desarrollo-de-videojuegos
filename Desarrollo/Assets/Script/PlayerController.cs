@@ -11,16 +11,18 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     SpriteRenderer sr;
     Animator animator;
-    public int kunaisDisponibles = 5;
+    public int kunaisDisponibles = 10;
     private bool puedeMoverseVerticalMente = false;
     private float defaultGravityScale = 1f;
     private bool puedeSaltar = true;
     private bool puedeLanzarKunai = true;
     public Text vidasText;
     private int vidas = 3;
-    public Text enemigosMuertosText;
-    public int enemigosMuertos = 0;
-
+    private bool estaCargandoKunai = false;
+    private float tiempoInicioCarga = 0f;
+    private float tiempoCargaMax = 5f;
+    private float tiempoCarga = 0f;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -53,12 +55,6 @@ public class PlayerController : MonoBehaviour
             vidasText.text = "VIDAS: " + vidas;
             Destroy(collision.gameObject);
         }
-    }
-
-    public void IncrementarEnemigosMuertos()
-    {
-        enemigosMuertos++;
-        enemigosMuertosText.text = "ENEMIGOS DERROTADOS: " + enemigosMuertos;
     }
 
     void OnTriggerStay2D(Collider2D other)
@@ -121,11 +117,46 @@ public class PlayerController : MonoBehaviour
 
     void SetUpLanzarKunai() {
         if (!puedeLanzarKunai || kunaisDisponibles <= 0) return;
-        if (Input.GetKeyUp(KeyCode.K))
+
+        if(Input.GetKeyDown(KeyCode.K))
         {
+            estaCargandoKunai = true;
+            tiempoInicioCarga = Time.time;
+        }
+
+        if (!estaCargandoKunai) return;
+
+        if(estaCargandoKunai)
+        {
+            tiempoCarga = Time.time - tiempoInicioCarga;
+
+        }
+
+        if (Input.GetKeyUp(KeyCode.K) && estaCargandoKunai)
+        {
+            estaCargandoKunai = false;
+
+            float daño = 1f;
+            Vector3 escala = new Vector3(1f, 1f, 1f); // Tamaño base
+
+            if (tiempoCarga >= 5f)
+            {
+                daño = 3f;
+                escala = new Vector3(4f, 4f, 3f); // Tamaño grande
+            }
+            else if (tiempoCarga >= 2f)
+            {
+                daño = 2f;
+                escala = new Vector3(2f, 2f, 1f); // Tamaño medio
+            }
+
             GameObject kunai = Instantiate(kunaiPrefab, transform.position, Quaternion.Euler(0, 0, -90));
             kunai.GetComponent<KunaiController>().SetDirection(direccion);
+            kunai.GetComponent<KunaiController>().SetDamage(daño);
+            kunai.transform.localScale = escala;
+
             kunaisDisponibles -= 1;
+            tiempoCarga = 0f;
         }
     }
 }
